@@ -1,6 +1,10 @@
 ---
-- name: Coder Academy
-  category: School
-  description: Mostly Doing Assignment Today
-  start_time: '21-Nov-2019 15:06 PM '
-#<File:0x00007ffec323f518>
+- name: asdf
+  category: d
+  description: d
+  start_time: 2019-11-21 21:17:20.834608000 +10:00
+- name: terminal-clockify app
+  category: coding
+  description: emulating clockify using ruby in terminal
+  start_time: 2019-11-21 21:19:08.103108000 +10:00
+#<File:0x00007fe61b9d15f8>

@@ -22,9 +22,11 @@ class Interface
         for i in Task.data
             puts "#{i.name} (#{i.category})"
             puts "#{i.description}"
-            puts "Start: #{i.start_time}"
+            puts "Start: #{DateFormat.change_to(i.start_time, "MEDIUM_DATE")} #{DateFormat.change_to(i.start_time, "MEDIUM_TIME")} "
             puts "End: #{i.end_time}"
-            puts "Duration: #{TimeDifference.between(i.start_time, Time.now).humanize}"
+            x = TimeDifference.between(i.start_time, Time.now).in_general
+
+            puts "Duration: #{x[:hours]}h #{x[:minutes]}m #{x[:seconds]}s"
             puts "----------\n\n"
         end 
     end
@@ -40,7 +42,7 @@ class Task
         @name = name
         @category = category
         @description = description
-        @start_time = "#{DateFormat.change_to(start_time, "MEDIUM_DATE")} #{DateFormat.change_to(start_time, "MEDIUM_TIME")} "
+        @start_time = start_time
         @end_time = "ongoing"
         @duration = 0
     end
@@ -58,6 +60,8 @@ class Task
         data = load_yaml('task-data.yml')
         data[0].push({"name" => task.name, "category" => task.category, "description" => task.description, "start_time" => task.start_time})
         File.open("./task-data.yml", 'w') { |file| file.write(data[0].to_yaml, file) }
+        p task.start_time
+        gets
     end
 
     def self.data()
@@ -85,13 +89,7 @@ while app_on
     Interface.header_display()
     Interface.task_list()
     Interface.control_panel()
-    answer = gets.chomp.to_s
-    case answer
-    when "1"
-        Task.add_task()
-    when "x"
-        app_on = false
-    end
+    sleep 1
 
 end
 

@@ -33,10 +33,6 @@ class ClockifyView
         return "#{date_layout} | #{time_layout}"
     end
 
-    def format_time(time)
-
-    end
-
     def list_entries(data)
         for entry in data
             puts "Description: #{entry["description"]}"
@@ -60,12 +56,28 @@ class ClockifyView
             puts "------------------------------------------"
             puts
         else
+            puts "Last Entry"
             puts "------------------------------------------"
-            puts "No Ongoing Entries"
+            puts "Description: #{data[0]["description"]}"
+            puts "Start Time: #{format_date(data[0]["timeInterval"]["start"])}"
+            puts "End Time: #{format_date(data[0]["timeInterval"]["end"])}"
+            puts "Duration: #{data[0]["timeInterval"]["duration"]}"
+            puts
             puts "Select [1] to start a new Entry"
             puts "------------------------------------------"
             puts
         end
+    end
+
+    def new_entry_prompt
+        puts "Please enter the required details: "
+        print "Description: "
+        description = gets.chomp
+        print "Project: "
+        project = gets.chomp.capitalize
+        print "Billable (true/false): "
+        billable = gets.chomp.downcase
+        return description, project, billable
     end
 
 end

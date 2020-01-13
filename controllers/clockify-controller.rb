@@ -22,6 +22,8 @@ class ClockifyController
             input = gets.chomp
             case input
             when "2"
+                @clockify_model.stop_current(@auth, @workspace_id, @user_id)
+            when "3"
                 @clockify_view.list_entries(@clockify_model.get_entries_data(@auth, @workspace_id, @user_id))
                 @clockify_view.back_prompt
             when "x"

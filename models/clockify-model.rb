@@ -1,4 +1,5 @@
 require "httparty"
+require "json"
 
 class ClockifyModel
 
@@ -24,6 +25,17 @@ class ClockifyModel
 
     def get_entries_data(auth, workspace_id, user_id)
         response = HTTParty.get("https://api.clockify.me/api/v1/workspaces/#{workspace_id}/user/#{user_id}/time-entries", :headers => {"X-Api-Key" => auth})
+    end
+
+    def stop_current(auth, workspace_id, user_id)
+        # time_now = Time.parse(Time.now.utc.to_s).iso8601
+
+        time_now = {"end" => Time.parse(Time.now.utc.to_s).iso8601}.to_json
+
+        HTTParty.patch("https://api.clockify.me/api/v1/workspaces/#{workspace_id}/user/#{user_id}/time-entries", 
+            :headers => {"X-Api-Key" => auth, "Content-Type" => "application/json"},
+            :body => time_now
+        )
     end
 
 end

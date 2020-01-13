@@ -1,3 +1,5 @@
+require "date_format"
+
 class ClockifyView
     
     def title
@@ -7,7 +9,8 @@ class ClockifyView
     end
 
     def control_panel
-        puts "[1] Add Task [2] Dashboard [3] Refresh [x] Quit"
+        puts "[1] Add Entry [2] Stop Current Entry" 
+        puts "[3] Dashboard [4] Refresh             [x] Quit"
     end
 
     def back_prompt
@@ -23,11 +26,26 @@ class ClockifyView
         return gets.chomp
     end
 
+    def format_date(date)
+        utc_time = Time.parse(date).utc
+        date_layout = DateFormat.change_to(utc_time, "MEDIUM_DATE")
+        time_layout = DateFormat.change_to(utc_time, "MEDIUM_TIME")
+        return "#{date_layout} | #{time_layout}"
+    end
+
+    def format_time(time)
+
+    end
+
     def list_entries(data)
         for entry in data
             puts "Description: #{entry["description"]}"
-            puts "Start Time: #{entry["timeInterval"]["start"]}"
-            puts "End Time: #{entry["timeInterval"]["end"]}"
+            puts "Start Time: #{format_date(entry["timeInterval"]["start"])}"
+            if entry["timeInterval"]["end"] == nil
+                puts "End Time: Ongoing"
+            else
+                puts "End Time: #{format_date(entry["timeInterval"]["end"])}"
+            end
             puts "Duration: #{entry["timeInterval"]["duration"]}"
             puts "------"
         end
@@ -37,7 +55,7 @@ class ClockifyView
         if data[0]["timeInterval"]["end"] == nil
             puts "------------------------------------------"
             puts "Description: #{data[0]["description"]}"
-            puts "Start Time: #{data[0]["timeInterval"]["start"]}"
+            puts "Start Time: #{format_date(data[0]["timeInterval"]["start"])}"
             puts "Status: Ongoing"
             puts "------------------------------------------"
             puts

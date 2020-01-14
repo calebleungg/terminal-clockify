@@ -11,7 +11,7 @@ class ClockifyView
 
     def control_panel
         puts "[1] Add       [2] Stop " 
-        puts "[3] History   [4] Refresh   [x] Quit"
+        puts "[3] History   [x] Quit"
     end
 
     def back_prompt
@@ -55,7 +55,7 @@ class ClockifyView
                 last_entry = date_only_format(entry["timeInterval"]["start"])
             end
             if entry["timeInterval"]["end"] == nil
-                rows.push([entry["description"], time_only_format(entry["timeInterval"]["start"]), "Ongoing", "    -    "])
+                rows.push([entry["description"], time_only_format(entry["timeInterval"]["start"]), "Ongoing", " - "])
             else
                 rows.push([entry["description"], time_only_format(entry["timeInterval"]["start"]), time_only_format(entry["timeInterval"]["end"]), format_duration(entry["timeInterval"]["duration"])])
             end
@@ -87,7 +87,7 @@ class ClockifyView
                 last_entry = date_only_format(entry["timeInterval"]["start"])
             end
             if entry["timeInterval"]["end"] == nil
-                rows.push([entry["description"], time_only_format(entry["timeInterval"]["start"]), "Ongoing", "    -    "])
+                rows.push([entry["description"], time_only_format(entry["timeInterval"]["start"]), "Ongoing", " - "])
             else
                 rows.push([entry["description"], time_only_format(entry["timeInterval"]["start"]), time_only_format(entry["timeInterval"]["end"]), format_duration(entry["timeInterval"]["duration"])])
             end

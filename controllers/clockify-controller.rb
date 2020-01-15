@@ -14,7 +14,7 @@ class ClockifyController
         loop do
             system("clear")
             @clockify_view.title
-            @clockify_view.short_entry_list(@clockify_model.get_entries_data)
+            @clockify_view.short_entry_list(@clockify_model.get_entries_data, @clockify_model.get_project_ids)
             @clockify_view.control_panel
             input = gets.chomp
             case input
@@ -26,7 +26,7 @@ class ClockifyController
             when "3"
                 system("clear")
                 @clockify_view.title
-                @clockify_view.list_table(@clockify_model.get_entries_data)
+                @clockify_view.list_table(@clockify_model.get_entries_data, @clockify_model.get_project_ids)
                 @clockify_view.back_prompt
             when "x"
                 break

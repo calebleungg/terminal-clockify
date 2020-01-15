@@ -10,8 +10,7 @@ class ClockifyView
     end
 
     def control_panel
-        puts "[1] Add       [2] Stop " 
-        puts "[3] History   [x] Quit"
+        puts "[1] Add  [2] Stop  [3] History  [x] Quit"
     end
 
     def back_prompt
@@ -44,20 +43,20 @@ class ClockifyView
         return duration[2..(letters-1)]
     end
 
-    def list_table(data)
+    def list_table(data, projects)
         rows = []
         live = []
         last_entry = ""
         for entry in data
             if date_only_format(entry["timeInterval"]["start"]) != last_entry
-                rows.push([" ", " ", " ", " "])
-                rows.push(["#{date_only_format(entry["timeInterval"]["start"])}\n------------", " ", " ", " "])
+                rows.push([" ", " ", " ", " ", " "])
+                rows.push(["#{date_only_format(entry["timeInterval"]["start"])}\n------------", " ", " ", " ", " "])
                 last_entry = date_only_format(entry["timeInterval"]["start"])
             end
             if entry["timeInterval"]["end"] == nil
-                rows.push([entry["description"], time_only_format(entry["timeInterval"]["start"]), "Ongoing", " - "])
+                rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), "Ongoing", " - "])
             else
-                rows.push([entry["description"], time_only_format(entry["timeInterval"]["start"]), time_only_format(entry["timeInterval"]["end"]), format_duration(entry["timeInterval"]["duration"])])
+                rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), time_only_format(entry["timeInterval"]["end"]), format_duration(entry["timeInterval"]["duration"])])
             end
         end
 
@@ -69,7 +68,7 @@ class ClockifyView
         puts table
     end
 
-    def short_entry_list(data)
+    def short_entry_list(data, projects)
         short_list = []
         count = 0
         rows = []
@@ -82,19 +81,19 @@ class ClockifyView
 
         for entry in short_list
             if date_only_format(entry["timeInterval"]["start"]) != last_entry
-                rows.push([" ", " ", " ", " "])
-                rows.push(["#{date_only_format(entry["timeInterval"]["start"])}\n------------", " ", " ", " "])
+                rows.push([" ", " ", " ", " ", " "])
+                rows.push(["#{date_only_format(entry["timeInterval"]["start"])}\n------------", " ", " ", " ", " "])
                 last_entry = date_only_format(entry["timeInterval"]["start"])
             end
             if entry["timeInterval"]["end"] == nil
-                rows.push([entry["description"], time_only_format(entry["timeInterval"]["start"]), "Ongoing", " - "])
+                rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), "Ongoing", " - "])
             else
-                rows.push([entry["description"], time_only_format(entry["timeInterval"]["start"]), time_only_format(entry["timeInterval"]["end"]), format_duration(entry["timeInterval"]["duration"])])
+                rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), time_only_format(entry["timeInterval"]["end"]), format_duration(entry["timeInterval"]["duration"])])
             end
         end
 
         if data[0]["timeInterval"]["end"] != nil
-            live.push(["Press [1] to Add Entry", "Start Time", "End Time", "Duration"]) if live.length == 0
+            live.push(["Press [1] to Add Entry", "Project", "Start Time", "End Time", "Duration"]) if live.length == 0
         end
 
         table = Terminal::Table.new :headings => live, :rows => rows, :style => {:width => 80, :border_x => "="}

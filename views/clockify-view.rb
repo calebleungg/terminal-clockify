@@ -10,7 +10,7 @@ class ClockifyView
     end
 
     def control_panel
-        puts "[1] Add  [2] Stop  [3] History  [x] Quit"
+        puts "[1] Add  [2] Stop  [3] History(30)  [x] Quit"
     end
 
     def back_prompt
@@ -47,17 +47,21 @@ class ClockifyView
         rows = []
         live = []
         last_entry = ""
+        count = 0
         for entry in data
-            if date_only_format(entry["timeInterval"]["start"]) != last_entry
-                rows.push([" ", " ", " ", " ", " "])
-                rows.push(["#{date_only_format(entry["timeInterval"]["start"])}\n------------", " ", " ", " ", " "])
-                last_entry = date_only_format(entry["timeInterval"]["start"])
+            if count < 30
+                if date_only_format(entry["timeInterval"]["start"]) != last_entry
+                    rows.push([" ", " ", " ", " ", " "])
+                    rows.push(["#{date_only_format(entry["timeInterval"]["start"])}\n------------", " ", " ", " ", " "])
+                    last_entry = date_only_format(entry["timeInterval"]["start"])
+                end
+                if entry["timeInterval"]["end"] == nil
+                    rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), "Ongoing", " - "])
+                else
+                    rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), time_only_format(entry["timeInterval"]["end"]), format_duration(entry["timeInterval"]["duration"])])
+                end
             end
-            if entry["timeInterval"]["end"] == nil
-                rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), "Ongoing", " - "])
-            else
-                rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), time_only_format(entry["timeInterval"]["end"]), format_duration(entry["timeInterval"]["duration"])])
-            end
+            count += 1
         end
 
         if live.length > 0 
@@ -69,27 +73,25 @@ class ClockifyView
     end
 
     def short_entry_list(data, projects)
-        short_list = []
         count = 0
         rows = []
         live = []
         last_entry = ""
-        until count == 6
-            short_list.push(data[count])
-            count += 1
-        end
 
-        for entry in short_list
-            if date_only_format(entry["timeInterval"]["start"]) != last_entry
-                rows.push([" ", " ", " ", " ", " "])
-                rows.push(["#{date_only_format(entry["timeInterval"]["start"])}\n------------", " ", " ", " ", " "])
-                last_entry = date_only_format(entry["timeInterval"]["start"])
+        for entry in data
+            if count < 5   
+                if date_only_format(entry["timeInterval"]["start"]) != last_entry
+                    rows.push([" ", " ", " ", " ", " "])
+                    rows.push(["#{date_only_format(entry["timeInterval"]["start"])}\n------------", " ", " ", " ", " "])
+                    last_entry = date_only_format(entry["timeInterval"]["start"])
+                end
+                if entry["timeInterval"]["end"] == nil
+                    rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), "Ongoing", " - "])
+                else
+                    rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), time_only_format(entry["timeInterval"]["end"]), format_duration(entry["timeInterval"]["duration"])])
+                end
             end
-            if entry["timeInterval"]["end"] == nil
-                rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), "Ongoing", " - "])
-            else
-                rows.push([entry["description"], projects.key(entry["projectId"]), time_only_format(entry["timeInterval"]["start"]), time_only_format(entry["timeInterval"]["end"]), format_duration(entry["timeInterval"]["duration"])])
-            end
+            count += 1
         end
 
         if data[0]["timeInterval"]["end"] != nil
